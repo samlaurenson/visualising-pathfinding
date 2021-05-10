@@ -1,0 +1,27 @@
+
+#board {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+  
+#board td{
+    width: 25px;
+    height: 25px;
+    outline: 1px solid black;
+}
+
+#board td.startPoint {
+    outline: 1px solid Red;
+    background-color: red;
+}
+
+#board td.endPoint {
+    outline: 1px solid green;
+    background-color: green;
+}
+  
+
+#mainGrid{
+    position: absolute;
+    z-index: 1;
+}
