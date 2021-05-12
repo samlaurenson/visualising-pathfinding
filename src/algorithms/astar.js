@@ -1,25 +1,22 @@
 async function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
     calculateConnections(nodeList, boardHeight, boardWidth);
     let openList = [];
-    let closedList = [];
     let path = [];
 
     let gScore = [];
     let fScore = [];
 
-    //Filling the gScore array with maximum integer values
+    //Filling gScore, fScore and path arrays
     for(let i = 0; i < boardHeight * boardWidth; ++i)
     {
         gScore.push(Number.MAX_SAFE_INTEGER);
         fScore.push(0);
-        path.push(-1);
+        path.push(0);
     }
 
     openList.push(startNode);
     gScore[startNode.id] = 0;
     fScore[startNode.id] = 0;
-
-    let inc = 0;
 
     while(openList.length !== 0)
     {
