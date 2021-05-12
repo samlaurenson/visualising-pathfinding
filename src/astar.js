@@ -1,6 +1,7 @@
 function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
     calculateConnections(nodeList, boardHeight, boardWidth);
     let openList = [];
+    let closedList = [];
     let path = [];
 
     let gScore = [];
@@ -18,7 +19,7 @@ function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
     gScore[startNode.id] = 0;
     fScore[startNode.id] = 0;
 
-    // let minFVal = Number.MAX_SAFE_INTEGER;
+    let inc = 0;
 
     while(openList.length !== 0)
     {
@@ -35,46 +36,104 @@ function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
 
         if(currentNode === goalNode)
         {
-            //Path has been found - return path
+            //Path has been found - draw the path
             let finalPath = [];
-            
-            //traversing through the path array to get back to beginning to find the shortest path taken
-            while(currentNode.id !== -1)
-            {
-                finalPath.push(path[currentNode.id] + 1);
-                currentNode = path[currentNode.id];
-            }
+            let n = goalNode.id;
+            let cell;
 
-            finalPath.reverse();
+            while(n !== startNode.id)
+            {
+                finalPath.push(path[n]);
+                if(n !== goalNode.id)
+                {
+                    cell = document.getElementById(n);
+                    cell.className = 'path';
+                }
+                n = path[n];
+            }
 
             return "Found!";
         }
 
-        openList.splice(currentNode.id, 1);
-        //turn currentnode.id blue
+        for(let i = 0; i < openList.length; ++i)
+        {
+            if(openList[i].id === currentNode.id)
+            {
+                openList.splice(i, 1);
+                break;
+            }
+        }
 
-        //Turn nodes green if they are in the connections for the node
         currentNode.connections.forEach(function(neighbour) {
+            //will need to add index to forEach parameters for this to work - but seems to stop after first lot of connections
+            // setTimeout(function(){
+            //     let gVal = gScore[currentNode.id] + 1;
+            //     if(gVal <= gScore[neighbour.id])
+            //     {
+            //         path[neighbour.id] = currentNode.id; //Neighbour will know where it has come from by placing it's parent in the path array
+            //         gScore[neighbour.id] = gVal;
+            //         let heuristic = calculateHeuristic(neighbour.id, goalNode.id, boardHeight, boardWidth);
+            //         fScore[neighbour.id] = gVal + heuristic;
+
+            //         //If neighbour node is not in the open list - then it will be added
+            //         if(!openList.includes(neighbour))
+            //         {
+            //             openList.push(neighbour);
+            //             neighbour.type = 'open';
+            //             let cell = document.getElementById(neighbour.id);
+            //             cell.className = neighbour.type;
+            //         }
+            //     }
+            // }, index * 200);
+
             let gVal = gScore[currentNode.id] + 1; //Since this is a grid, will only need to increase distance by 1
             
             //If the distance travelled from current node to this neighbour node is less than the distance travelled already
             //(If there is a shorter route, then follow this one)
-            if(gVal < gScore[neighbour])
+            if(gVal <= gScore[neighbour.id])
             {
-                path[neighbour] = currentNode.id; //Neighbour will know where it has come from by placing it's parent in the path array
-                gScore[neighbour] = gVal;
-                let heuristic = calculateHeuristic(neighbour, goalNode.id, boardHeight, boardWidth);
-                fScore[neighbour] = gVal + heuristic;
+                path[neighbour.id] = currentNode.id; //Neighbour will know where it has come from by placing it's parent in the path array
+                gScore[neighbour.id] = gVal;
+                let heuristic = calculateHeuristic(neighbour.id, goalNode.id, boardHeight, boardWidth);
+                fScore[neighbour.id] = gVal + heuristic;
 
                 //If neighbour node is not in the open list - then it will be added
-                if(!openList.contains(neighbour))
+                if(!openList.includes(neighbour))
                 {
                     openList.push(neighbour);
+
+                    //Making if statement to prevent goal node type being changed
+                    if(neighbour.id !== goalNode.id)
+                    {
+                        neighbour.type = 'open';
+                        let cell = document.getElementById(neighbour.id);
+                        cell.className = neighbour.type;
+                    }
                 }
             }
-        });    
+        });
+        
+        //trying to slow down the increments so the visualisation can be followed but for some reason it isn't happening
+        turnOpen(inc);
+        inc++;
     }
     return undefined; //if goal was not found
+}
+
+async function turnOpen(inc)
+{
+    await sleep(inc);
+}
+
+// async function turnOpen(cell, neighbour, inc)
+// {
+//     await sleep(inc);
+//     cell.className = neighbour.type;
+// }
+
+function sleep(inc)
+{
+    return new Promise(r=>setTimeout(r,inc * 1000));
 }
 
 //Function to get the neighbours/connections for each node
@@ -85,44 +144,68 @@ function calculateConnections(nodes, height, width)
     //this.width >>> Anything less than, or equal to this is on the first row of the grid
     // ID mod width >>> produces column the ID is on
     // floor( (ID/width) + 1) >>> prodcues the row the ID is on (i think)
-    for(let node in nodes)
+
+    for(let x = 0; x < nodes.length; ++x)
     {
-        let column = (node.id % width) - 1; //Doing -1 as arrays start from 0 
-        let row = Math.floor(node.id/width); //Assuming row starts at 0, otherwise (node.id/width) + 1
-
-        let currentNodeCoords = new coordinate(row, column);
-        //To get the ID of a node from the row and column, just multiply them
-
-        //there is a node left - add to connection
-        if(currentNodeCoords.x - 1 >= 0)
+        for(let y = 0; y < nodes[x].length; ++y)
         {
-            node.connections.push(currentNodeCoords.x-1 * currentNodeCoords.y); //Adding the adjacent node ID to the connections of the current node
-        }
+            //If there is something above this node
+            if(x - 1 >= 0)
+            {
+                nodes[x][y].connections.push(nodes[x-1][y]);
+            }
 
-        //there is a node right - add to connection
-        if(currentNodeCoords.x + 1 <= width)
-        {
-            node.connections.push(currentNodeCoords.x+1 * currentNodeCoords.y); //Adding the adjacent node ID to the connections of the current node
-        }
+            //there is a node below - add to connection
+            if(x + 1 < height)
+            {
+                nodes[x][y].connections.push(nodes[x+1][y]);
+            }
 
-        //there is a node above - add to connection
-        if(currentNodeCoords.y - 1 >= 0)
-        {
-            node.connections.push(currentNodeCoords.x * currentNodeCoords.y-1); //Adding the adjacent node ID to the connections of the current node
-        }
+            //there is a node to left - add to connection
+            if(y - 1 >= 0)
+            {
+                nodes[x][y].connections.push(nodes[x][y-1]);
+            }
 
-        //there is a node below - add to connection
-        if(currentNodeCoords.y + 1 <= height)
-        {
-            node.connections.push(currentNodeCoords.x * currentNodeCoords.y+1); //Adding the adjacent node ID to the connections of the current node
+            //there is a node to right - add to connection
+            if(y + 1 < width)
+            {
+                nodes[x][y].connections.push(nodes[x][y+1]);
+            }
+
+            //DIAGONALS
+
+            //TOP LEFT
+            if(x-1>=0 && y-1>=0)
+            {
+                nodes[x][y].connections.push(nodes[x-1][y-1]);
+            }
+
+            //TOP RIGHT
+            if(x-1>=0 && y+1 < width)
+            {
+                nodes[x][y].connections.push(nodes[x-1][y+1]);
+            }
+
+            //BOTTOM LEFT
+            if(x+1 < height && y-1>=0)
+            {
+                nodes[x][y].connections.push(nodes[x+1][y-1]);
+            }
+
+            //BOTTOM RIGHT
+            if(x+1 < height && y+1 < width)
+            {
+                nodes[x][y].connections.push(nodes[x+1][y+1]);
+            }
         }
     }
 }
 
 function calculateHeuristic(curr, goal, height, width)
 {
-    let current = new coordinate(((curr % width) - 1), Math.floor(curr/width));
-    let goalCoord = new coordinate(((goal % width) - 1), Math.floor(goal/width));
+    let current = new coordinate(((curr % width)), Math.floor(curr/width));
+    let goalCoord = new coordinate(((goal % width)), Math.floor(goal/width));
     return Math.sqrt((goalCoord.x - current.x)**2 + (goalCoord.y - current.y)**2);
 }
 

@@ -11,13 +11,23 @@
 }
 
 #board td.startPoint {
-    outline: 1px solid Red;
+    outline: 1px solid black;
     background-color: red;
 }
 
 #board td.endPoint {
-    outline: 1px solid green;
+    outline: 1px solid black;
     background-color: green;
+}
+
+#board td.open {
+    outline: 1px solid black;
+    background-color: blue;
+}
+
+#board td.path {
+    outline: 1px solid black;
+    background-color: yellow;
 }
   
 

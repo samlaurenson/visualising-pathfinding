@@ -1,8 +1,6 @@
 import React from 'react';
 import Grid from './Grid.js';
 
-//let grid = undefined;
-
 class PathFind extends React.Component {
     constructor(props)
     {
@@ -17,12 +15,11 @@ class PathFind extends React.Component {
     }
 
     handleLoad() {
-        //Build();
         this.grid.init();
     }
 
     startAlg() {
-        this.grid.loadPathFind();
+        this.grid.loadPathfind();
     }
 
     render() {
@@ -34,12 +31,5 @@ class PathFind extends React.Component {
         ); 
     }
 }
-
-// function Build() {
-//     grid = new Grid(15, 15);
-//     grid.init();
-//     console.log("Testing function only runs once");
-//     //grid.loadPathfind();
-// }
 
 export default PathFind;
