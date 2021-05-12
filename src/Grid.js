@@ -1,12 +1,14 @@
 import './stylesheet.css';
 import Node from './Nodes';
-import AStar from './astar';
+import AStar from './algorithms/astar';
 
 function Grid(height, width) {
     this.height = height;
     this.width = width;
     this.gridArray = [];
     this.nodes = [];
+    this.start = undefined;
+    this.end = undefined;
     //this.algorithm = undefined;
 }
 
@@ -37,9 +39,11 @@ Grid.prototype.createGrid = function() {
             if(nodeID === 23)
             {
                 node = new Node(nodeID, 'startPoint');
+                this.start = node;
             } else if(nodeID === 120)
             {
                 node = new Node(nodeID, 'endPoint');
+                this.end = node;
             }
             else {
                 node = new Node(nodeID, 'inactive');
@@ -58,7 +62,7 @@ Grid.prototype.createGrid = function() {
 };
 
 Grid.prototype.loadPathfind = function () {
-    AStar(this.nodes, getNodeByID(23, this.height, this.width, this.nodes), getNodeByID(120, this.height, this.width, this.nodes), this.height, this.width);
+    AStar(this.nodes, getNodeByID(this.start.id, this.height, this.width, this.nodes), getNodeByID(this.end.id, this.height, this.width, this.nodes), this.height, this.width);
 };
 
 function getNodeByID(nodeID, h, width, nodes)

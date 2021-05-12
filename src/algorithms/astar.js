@@ -1,4 +1,4 @@
-function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
+async function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
     calculateConnections(nodeList, boardHeight, boardWidth);
     let openList = [];
     let closedList = [];
@@ -64,87 +64,52 @@ function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
             }
         }
 
-        currentNode.connections.forEach(function(neighbour) {
-            //will need to add index to forEach parameters for this to work - but seems to stop after first lot of connections
-            // setTimeout(function(){
-            //     let gVal = gScore[currentNode.id] + 1;
-            //     if(gVal <= gScore[neighbour.id])
-            //     {
-            //         path[neighbour.id] = currentNode.id; //Neighbour will know where it has come from by placing it's parent in the path array
-            //         gScore[neighbour.id] = gVal;
-            //         let heuristic = calculateHeuristic(neighbour.id, goalNode.id, boardHeight, boardWidth);
-            //         fScore[neighbour.id] = gVal + heuristic;
-
-            //         //If neighbour node is not in the open list - then it will be added
-            //         if(!openList.includes(neighbour))
-            //         {
-            //             openList.push(neighbour);
-            //             neighbour.type = 'open';
-            //             let cell = document.getElementById(neighbour.id);
-            //             cell.className = neighbour.type;
-            //         }
-            //     }
-            // }, index * 200);
-
-            let gVal = gScore[currentNode.id] + 1; //Since this is a grid, will only need to increase distance by 1
-            
-            //If the distance travelled from current node to this neighbour node is less than the distance travelled already
-            //(If there is a shorter route, then follow this one)
-            if(gVal <= gScore[neighbour.id])
-            {
-                path[neighbour.id] = currentNode.id; //Neighbour will know where it has come from by placing it's parent in the path array
-                gScore[neighbour.id] = gVal;
-                let heuristic = calculateHeuristic(neighbour.id, goalNode.id, boardHeight, boardWidth);
-                fScore[neighbour.id] = gVal + heuristic;
-
-                //If neighbour node is not in the open list - then it will be added
-                if(!openList.includes(neighbour))
-                {
-                    openList.push(neighbour);
-
-                    //Making if statement to prevent goal node type being changed
-                    if(neighbour.id !== goalNode.id)
-                    {
-                        neighbour.type = 'open';
-                        let cell = document.getElementById(neighbour.id);
-                        cell.className = neighbour.type;
-                    }
-                }
-            }
-        });
-        
-        //trying to slow down the increments so the visualisation can be followed but for some reason it isn't happening
-        turnOpen(inc);
-        inc++;
+        await exploreConnections(currentNode, gScore, fScore, goalNode, boardHeight, boardWidth, openList, path);
     }
     return undefined; //if goal was not found
 }
 
-async function turnOpen(inc)
+async function exploreConnections(currentNode, gScore, fScore, goalNode, boardHeight, boardWidth, openList, path)
 {
-    await sleep(inc);
+    for(let i = 0; i < currentNode.connections.length; ++i)
+    {
+        let neighbour = currentNode.connections[i];
+
+        let gVal = gScore[currentNode.id] + 1; //Since this is a grid, will only need to increase distance by 1
+            
+        //If the distance travelled from current node to this neighbour node is less than the distance travelled already
+        //(If there is a shorter route, then follow this one)
+        if(gVal <= gScore[neighbour.id])
+        {
+            path[neighbour.id] = currentNode.id; //Neighbour will know where it has come from by placing it's parent in the path array
+            gScore[neighbour.id] = gVal;
+            let heuristic = calculateHeuristic(neighbour.id, goalNode.id, boardHeight, boardWidth);
+            fScore[neighbour.id] = gVal + heuristic;
+
+            //If neighbour node is not in the open list - then it will be added
+            if(!openList.includes(neighbour))
+            {
+                await sleep(10 * i);
+                openList.push(neighbour);
+
+                //Making if statement to prevent goal node type being changed
+                if(neighbour.id !== goalNode.id)
+                {
+                    neighbour.type = 'open';
+                    let cell = document.getElementById(neighbour.id);
+                    cell.className = neighbour.type;
+                }
+            }
+        }
+    }
 }
 
-// async function turnOpen(cell, neighbour, inc)
-// {
-//     await sleep(inc);
-//     cell.className = neighbour.type;
-// }
-
-function sleep(inc)
-{
-    return new Promise(r=>setTimeout(r,inc * 1000));
-}
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
 //Function to get the neighbours/connections for each node
-//Only top, bottom, left and right nodes are counted as connections. Does not do diagonals.
 function calculateConnections(nodes, height, width)
 {
-    //(this.height * this.width) - this.width >>> First node ID on last row, any ID greater  than, or equal to this is on the last row of the grid
-    //this.width >>> Anything less than, or equal to this is on the first row of the grid
-    // ID mod width >>> produces column the ID is on
-    // floor( (ID/width) + 1) >>> prodcues the row the ID is on (i think)
-
+    //Nested for loop to get connections for every node in the grid
     for(let x = 0; x < nodes.length; ++x)
     {
         for(let y = 0; y < nodes[x].length; ++y)
