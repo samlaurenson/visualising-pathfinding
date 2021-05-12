@@ -62,13 +62,33 @@ Grid.prototype.createGrid = function() {
 };
 
 Grid.prototype.loadPathfind = function () {
-    AStar(this.nodes, getNodeByID(this.start.id, this.height, this.width, this.nodes), getNodeByID(this.end.id, this.height, this.width, this.nodes), this.height, this.width);
+    AStar(this.nodes, findNodeWithID(this.start.id, this.nodes), findNodeWithID(this.end.id, this.nodes), this.height, this.width);
+    //AStar(this.nodes, getNodeByID(this.start.id, this.height, this.width, this.nodes), getNodeByID(this.end.id, this.height, this.width, this.nodes), this.height, this.width);
 };
+
+//This function will find the node with the ID no matter where it is on the grid
+//Unfortunately, this comes at a cost of greater time complexity than the "getNodeByID" function as it has to search every node
+//So if it would be possible to swap ID's when moved in the grid that could improve program speeds
+//But for now this will do. :)
+function findNodeWithID(lookForID, nodes)
+{
+    for(let r = 0; r < nodes.length; ++r)
+    {
+        for(let n = 0; n < nodes[r].length; ++n)
+        {
+            if(nodes[r][n].id === lookForID)
+            {
+                return nodes[r][n];
+            }
+        }
+    }
+    return undefined;
+}
 
 function getNodeByID(nodeID, h, width, nodes)
 {
-    // let column = (nodeID % width) - 1; //Doing -1 as arrays start from 0 
-    let column = (nodeID % width); //Doing -1 as arrays start from 0 
+    //Function that gets nodes by ID assuming they have not been moved on grid 
+    let column = (nodeID % width); 
     let row = Math.floor(nodeID / width); //Assuming row starts at 0, otherwise (node.id/width) + 1
     return nodes[row][column];
 }
