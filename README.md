@@ -1,6 +1,7 @@
-Making a pathfinding visualiser to try and help myself understand how to use React.js and learn some JavaScript
+Making a pathfinding visualiser to try and help myself learn and understand how to use React.js and JavaScript
 
 After running and pressing the start button to begin pathfinding, the program will start moving from the start node (red) to the goal node (green)
+
 ![Alt text](https://i.gyazo.com/0a0311f5d7579ce0714ba757145c0b7c.gif)
 
 Currently, only the A* algorithm has been implemented :)
