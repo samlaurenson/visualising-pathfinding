@@ -4,6 +4,12 @@ After running and pressing the start button to begin pathfinding, the program wi
 
 ![Alt text](https://i.gyazo.com/0a0311f5d7579ce0714ba757145c0b7c.gif)
 
+
+
+## With walls added in:
+
+![Alt text](https://i.gyazo.com/4b82307d8521c6ebff66ec8e02969c35.gif)
+
 Currently, only the A* algorithm has been implemented :)
 
 
