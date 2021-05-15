@@ -20,6 +20,7 @@ class PathFind extends React.Component {
     }
 
     startAlg() {
+        this.grid.clearGrid();
         this.grid.loadPathfind();
     }
 

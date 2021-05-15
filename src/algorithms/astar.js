@@ -112,6 +112,8 @@ function calculateConnections(nodes, height, width)
     {
         for(let y = 0; y < nodes[x].length; ++y)
         {
+            nodes[x][y].connections = []; //Clearing any existing conneciton for the node
+
             //If selected node is a wall - then skip it
             if(nodes[x][y].type === 'wall')
             {
@@ -145,25 +147,26 @@ function calculateConnections(nodes, height, width)
             //DIAGONALS
 
             //TOP LEFT
-            if(x-1>=0 && y-1>=0 && nodes[x-1][y-1].type !== 'wall')
+            //Checks if there is a wall in square it wants to go and wall directly above themself
+            if(x-1>=0 && y-1>=0 && nodes[x-1][y-1].type !== 'wall' && nodes[x-1][y].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x-1][y-1]);
             }
 
             //TOP RIGHT
-            if(x-1>=0 && y+1 < width && nodes[x-1][y+1].type !== 'wall')
+            if(x-1>=0 && y+1 < width && nodes[x-1][y+1].type !== 'wall' && nodes[x-1][y].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x-1][y+1]);
             }
 
             //BOTTOM LEFT
-            if(x+1 < height && y-1>=0 && nodes[x+1][y-1].type !== 'wall')
+            if(x+1 < height && y-1>=0 && nodes[x+1][y-1].type !== 'wall' && nodes[x+1][y].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x+1][y-1]);
             }
 
             //BOTTOM RIGHT
-            if(x+1 < height && y+1 < width && nodes[x+1][y+1].type !== 'wall')
+            if(x+1 < height && y+1 < width && nodes[x+1][y+1].type !== 'wall' && nodes[x+1][y].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x+1][y+1]);
             }

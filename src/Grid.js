@@ -15,6 +15,7 @@ function Grid(height, width) {
 
 Grid.prototype.init = function() {
     this.createGrid();
+    this.addEventListeners();
 };
 
 Grid.prototype.createGrid = function() {
@@ -45,9 +46,6 @@ Grid.prototype.createGrid = function() {
             {
                 node = new Node(nodeID, 'endPoint');
                 this.end = node;
-            } else if(nodeID >= 64 && nodeID <= 69)
-            {
-                node = new Node(nodeID, 'wall');
             }
             else {
                 node = new Node(nodeID, 'inactive');
@@ -85,6 +83,25 @@ Grid.prototype.clearGrid = function() {
             if(cell.className === 'path' || cell.className === 'open')
             {
                 cell.className = 'inactive';
+            }
+        }
+    }
+};
+
+Grid.prototype.addEventListeners = function() {
+    for(let r = 0; r < this.nodes.length; ++r)
+    {
+        for(let c = 0; c < this.nodes[r].length; ++c)
+        {
+            let cell = document.getElementById(this.nodes[r][c].id);
+
+            //When user clicks on an inactive square - will turn in to a wall
+            //if user clicks on a wall then the square will turn inactive
+            cell.onmousedown = (e) => {
+                e.preventDefault();
+                cell.className = cell.className === 'inactive' ? 'wall' : 'inactive';
+                this.nodes[r][c].type = cell.className;
+                //console.log(cell.id);
             }
         }
     }
