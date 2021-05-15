@@ -9,6 +9,7 @@ function Grid(height, width) {
     this.nodes = [];
     this.start = undefined;
     this.end = undefined;
+    this.working = false;
     //this.algorithm = undefined;
 }
 
@@ -64,13 +65,18 @@ Grid.prototype.createGrid = function() {
     grid.innerHTML = gridHTML;
 };
 
-Grid.prototype.loadPathfind = function () {
-    AStar(this.nodes, findNodeWithID(this.start.id, this.nodes), findNodeWithID(this.end.id, this.nodes), this.height, this.width);
-    //AStar(this.nodes, getNodeByID(this.start.id, this.height, this.width, this.nodes), getNodeByID(this.end.id, this.height, this.width, this.nodes), this.height, this.width);
+Grid.prototype.loadPathfind = async function () {
+    //Probably a better way of doing this - but the grid has a property to store whether it is currently working on an algorithm
+    //If it is - then the reset button will not work until the algorithm has finished
+    //Once algorithm is finished then the "working" property will be set to false and the user can press the reset button
+    this.working = true;
+    await AStar(this.nodes, findNodeWithID(this.start.id, this.nodes), findNodeWithID(this.end.id, this.nodes), this.height, this.width);
+    this.working = false;
 };
 
 //Method to get rid of the yellow tiles (discovered path) and blue tiles (tiles in open list)
 Grid.prototype.clearGrid = function() {
+    if(this.working === true) { return; }
     for(let r = 0; r < this.nodes.length; ++r)
     {
         for(let c = 0; c < this.nodes[r].length; ++c)

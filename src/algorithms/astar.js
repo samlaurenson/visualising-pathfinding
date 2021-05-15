@@ -49,6 +49,7 @@ async function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
                 n = path[n];
             }
 
+            
             return "Found!";
         }
 
