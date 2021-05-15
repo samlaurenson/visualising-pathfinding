@@ -44,6 +44,9 @@ Grid.prototype.createGrid = function() {
             {
                 node = new Node(nodeID, 'endPoint');
                 this.end = node;
+            } else if(nodeID >= 64 && nodeID <= 69)
+            {
+                node = new Node(nodeID, 'wall');
             }
             else {
                 node = new Node(nodeID, 'inactive');
@@ -64,6 +67,21 @@ Grid.prototype.createGrid = function() {
 Grid.prototype.loadPathfind = function () {
     AStar(this.nodes, findNodeWithID(this.start.id, this.nodes), findNodeWithID(this.end.id, this.nodes), this.height, this.width);
     //AStar(this.nodes, getNodeByID(this.start.id, this.height, this.width, this.nodes), getNodeByID(this.end.id, this.height, this.width, this.nodes), this.height, this.width);
+};
+
+//Method to get rid of the yellow tiles (discovered path) and blue tiles (tiles in open list)
+Grid.prototype.clearGrid = function() {
+    for(let r = 0; r < this.nodes.length; ++r)
+    {
+        for(let c = 0; c < this.nodes[r].length; ++c)
+        {
+            let cell = document.getElementById(this.nodes[r][c].id);
+            if(cell.className === 'path' || cell.className === 'open')
+            {
+                cell.className = 'inactive';
+            }
+        }
+    }
 };
 
 //This function will find the node with the ID no matter where it is on the grid

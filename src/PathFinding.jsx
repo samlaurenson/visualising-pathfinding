@@ -7,6 +7,7 @@ class PathFind extends React.Component {
         super(props);
         this.handleLoad = this.handleLoad.bind(this);
         this.startAlg = this.startAlg.bind(this);
+        this.clearGrid = this.clearGrid.bind(this);
         this.grid = new Grid(15, 15);
     }
 
@@ -22,10 +23,15 @@ class PathFind extends React.Component {
         this.grid.loadPathfind();
     }
 
+    clearGrid() {
+        this.grid.clearGrid();
+    }
+
     render() {
         return (
             <div id='grid'>
                 <button id="startPathing" onClick={this.startAlg}>Start</button>
+                <button id="clear" onClick={this.clearGrid}>Reset</button>
                 <table id='board'></table>
             </div>
         ); 

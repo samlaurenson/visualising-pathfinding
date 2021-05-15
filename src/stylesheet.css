@@ -29,6 +29,11 @@
     outline: 1px solid black;
     background-color: yellow;
 }
+
+#board td.wall {
+    outline: 1px solid black;
+    background-color: black;
+}
   
 
 #mainGrid{

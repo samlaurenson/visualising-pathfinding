@@ -111,26 +111,32 @@ function calculateConnections(nodes, height, width)
     {
         for(let y = 0; y < nodes[x].length; ++y)
         {
+            //If selected node is a wall - then skip it
+            if(nodes[x][y].type === 'wall')
+            {
+                continue;
+            }
+
             //If there is something above this node
-            if(x - 1 >= 0)
+            if(x - 1 >= 0 && nodes[x-1][y].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x-1][y]);
             }
 
             //there is a node below - add to connection
-            if(x + 1 < height)
+            if(x + 1 < height && nodes[x+1][y].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x+1][y]);
             }
 
             //there is a node to left - add to connection
-            if(y - 1 >= 0)
+            if(y - 1 >= 0 && nodes[x][y-1].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x][y-1]);
             }
 
             //there is a node to right - add to connection
-            if(y + 1 < width)
+            if(y + 1 < width && nodes[x][y+1].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x][y+1]);
             }
@@ -138,25 +144,25 @@ function calculateConnections(nodes, height, width)
             //DIAGONALS
 
             //TOP LEFT
-            if(x-1>=0 && y-1>=0)
+            if(x-1>=0 && y-1>=0 && nodes[x-1][y-1].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x-1][y-1]);
             }
 
             //TOP RIGHT
-            if(x-1>=0 && y+1 < width)
+            if(x-1>=0 && y+1 < width && nodes[x-1][y+1].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x-1][y+1]);
             }
 
             //BOTTOM LEFT
-            if(x+1 < height && y-1>=0)
+            if(x+1 < height && y-1>=0 && nodes[x+1][y-1].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x+1][y-1]);
             }
 
             //BOTTOM RIGHT
-            if(x+1 < height && y+1 < width)
+            if(x+1 < height && y+1 < width && nodes[x+1][y+1].type !== 'wall')
             {
                 nodes[x][y].connections.push(nodes[x+1][y+1]);
             }
