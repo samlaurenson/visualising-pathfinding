@@ -77,7 +77,7 @@ async function exploreConnections(currentNode, gScore, fScore, goalNode, boardHe
             
         //If the distance travelled from current node to this neighbour node is less than the distance travelled already
         //(If there is a shorter route, then follow this one)
-        if(gVal <= gScore[neighbour.id])
+        if(gVal < gScore[neighbour.id])
         {
             path[neighbour.id] = currentNode.id; //Neighbour will know where it has come from by placing it's parent in the path array
             gScore[neighbour.id] = gVal;
