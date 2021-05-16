@@ -113,7 +113,7 @@ Grid.prototype.addEventListeners = function() {
                     cell.className === 'startPoint' ? this.start = undefined : this.end = undefined;
 
                     //Make this node inactive
-                    this.nodes[r][c] = 'inactive';
+                    this.nodes[r][c].type = 'inactive';
                     cell.className = 'inactive';
                     return; 
                 } 
