@@ -9,9 +9,10 @@ After running and pressing the start button to begin pathfinding, the program wi
 ## With walls added in:
 
 ![Alt text](https://i.gyazo.com/4b82307d8521c6ebff66ec8e02969c35.gif)
-![Alt text](https://i.gyazo.com/1f9ca19c54f899ef0db2e2b85fa980a0.gif)
+![Alt text](https://i.gyazo.com/096032bf44fed9e88160d5cb439fbb22.gif)
 
-(well aware that the second gif does look weird with the path starting from the corner instead of straight along - but the distance is still the same since cost to move between grids is only 1 unit. It annoys me too. Might make diagonal movement cost .5 more than adjacent movements another time (maybe))
+## Dragging Start/End points:
+![Alt text](https://i.gyazo.com/e9fefbeab596262bf77d15e6bc71e3e0.gif)
 
 Currently, only the A* algorithm has been implemented :)
 
