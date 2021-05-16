@@ -84,6 +84,7 @@ Grid.prototype.clearGrid = function() {
             if(cell.className === 'path' || cell.className === 'open')
             {
                 cell.className = 'inactive';
+                this.nodes[r][c].type = 'inactive';
             }
         }
     }
@@ -113,7 +114,6 @@ Grid.prototype.addEventListeners = function() {
                     cell.className === 'startPoint' ? this.start = undefined : this.end = undefined;
 
                     //Make this node inactive
-                    this.nodes[r][c].type = 'inactive';
                     cell.className = 'inactive';
                     return; 
                 } 
@@ -131,6 +131,7 @@ Grid.prototype.addEventListeners = function() {
                 cell.className = this.dragging.type;
                 this.nodes[r][c].type = this.dragging.type;
                 this.dragging.type === 'startPoint' ? this.start = this.nodes[r][c] : this.end = this.nodes[r][c];
+                this.dragging.type = 'inactive'; //Making the old position of the node inactive
                 this.clearGrid(); 
                 this.dragging = undefined;
             }
