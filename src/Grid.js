@@ -90,13 +90,13 @@ Grid.prototype.clearGrid = function() {
 };
 
 Grid.prototype.addEventListeners = function() {
-    //let dragging = false;
     for(let r = 0; r < this.nodes.length; ++r)
     {
         for(let c = 0; c < this.nodes[r].length; ++c)
         {
             let cell = document.getElementById(this.nodes[r][c].id);
             //cell.draggable = true;
+
             //When user clicks on an inactive square - will turn in to a wall
             //if user clicks on a wall then the square will turn inactive
             cell.onmousedown = (e) => {
@@ -113,13 +113,12 @@ Grid.prototype.addEventListeners = function() {
                     cell.className === 'startPoint' ? this.start = undefined : this.end = undefined;
 
                     //Make this node inactive
-                    this.dragging.type = cell.className;
+                    this.nodes[r][c] = 'inactive';
                     cell.className = 'inactive';
                     return; 
                 } 
                 cell.className = cell.className === 'inactive' ? 'wall' : 'inactive';
                 this.nodes[r][c].type = cell.className;
-                //console.log(cell.id);
             }
 
             // cell.onmousemove = (e) => {
@@ -134,7 +133,6 @@ Grid.prototype.addEventListeners = function() {
                 this.dragging.type === 'startPoint' ? this.start = this.nodes[r][c] : this.end = this.nodes[r][c];
                 this.clearGrid(); 
                 this.dragging = undefined;
-                //console.log("Up on: " + cell.id);
             }
         }
     }
