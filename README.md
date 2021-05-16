@@ -12,9 +12,14 @@ After running and pressing the start button to begin pathfinding, the program wi
 ![Alt text](https://i.gyazo.com/096032bf44fed9e88160d5cb439fbb22.gif)
 
 ## Dragging Start/End points:
-![Alt text](https://i.gyazo.com/e9fefbeab596262bf77d15e6bc71e3e0.gif)
+![Alt text](https://i.gyazo.com/84b71e64119a9b2323190f5e856058c8.gif)
+
 
 Currently, only the A* algorithm has been implemented :)
+
+
+
+
 
 
 
