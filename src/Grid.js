@@ -131,6 +131,23 @@ Grid.prototype.addEventListeners = function() {
             cell.onmouseup = (e) => {
                 if(this.dragging === undefined) { return; }
 
+                //If user drags end point on top of start point - set end point back to where it came from and re-colour the nodes
+                if('startPoint' === this.nodes[r][c].type && this.dragging.type === 'endPoint') {
+                    this.end = this.dragging;
+                    document.getElementById(this.start.id).className = this.start.type;
+                    document.getElementById(this.end.id).className = this.end.type;
+                    return;
+                }
+
+                //If user drags start point on top of end point - set start point back to where it came from and re-colour the nodes
+                if('endPoint' === this.nodes[r][c].type && this.dragging.type === 'startPoint')
+                {
+                    this.start = this.dragging;
+                    document.getElementById(this.start.id).className = this.start.type;
+                    document.getElementById(this.end.id).className = this.end.type;
+                    return;
+                }
+
                 //checks whether the user has clicked on the start/end point instead of dragging
                 if(this.dragging.id === parseInt(cell.id)) { 
                     this.dragging.type === 'startPoint' ? this.start = this.nodes[r][c] : this.end = this.nodes[r][c];
