@@ -96,38 +96,48 @@ Grid.prototype.addEventListeners = function() {
         for(let c = 0; c < this.nodes[r].length; ++c)
         {
             let cell = document.getElementById(this.nodes[r][c].id);
-            //cell.draggable = true;
 
             //When user clicks on an inactive square - will turn in to a wall
             //if user clicks on a wall then the square will turn inactive
             cell.onmousedown = (e) => {
                 e.preventDefault();
-                
-                //If algorithm is already being worked then don't allow mouse events
+                //If pathfinding algorithm is already in progress then don't allow mouse events
                 if(this.working) { return; }
 
                 if(cell.className === 'startPoint' || cell.className === 'endPoint') {
                     //Set node to drag to the current start/end node 
                     this.dragging = this.nodes[r][c];
 
-                    //Setting the start/end to undefined (will be used to check if the user has dragged either points off the grid)
+                    //Setting the start/end to undefined (will be used to check if the user has dragged either start or end points off the grid)
                     cell.className === 'startPoint' ? this.start = undefined : this.end = undefined;
-
-                    //Make this node inactive
-                    cell.className = 'inactive';
                     return; 
-                } 
+                }
                 cell.className = cell.className === 'inactive' ? 'wall' : 'inactive';
                 this.nodes[r][c].type = cell.className;
             }
 
-            // cell.onmousemove = (e) => {
-            //     if(this.dragging === undefined) { return; }
-            //     //this.dragging.draggable = true;
-            // }
+            cell.onmousemove = (e) => {
+                if(this.dragging === undefined) { return; }
+                cell.className = this.dragging.type;
+            }
+
+            cell.onmouseleave = (e) => {
+                if(this.dragging === undefined) { return; }
+                let node = findNodeWithID(parseInt(cell.id), this.nodes);
+                if(this.dragging.id === node.id) { cell.className = 'inactive'; return; } //Means a duplicate cell won't be left behind
+                cell.className = node.type;
+            }
 
             cell.onmouseup = (e) => {
                 if(this.dragging === undefined) { return; }
+
+                //checks whether the user has clicked on the start/end point instead of dragging
+                if(this.dragging.id === parseInt(cell.id)) { 
+                    this.dragging.type === 'startPoint' ? this.start = this.nodes[r][c] : this.end = this.nodes[r][c];
+                    this.dragging = undefined; 
+                    return; 
+                }
+
                 cell.className = this.dragging.type;
                 this.nodes[r][c].type = this.dragging.type;
                 this.dragging.type === 'startPoint' ? this.start = this.nodes[r][c] : this.end = this.nodes[r][c];
@@ -142,10 +152,12 @@ Grid.prototype.addEventListeners = function() {
     //they will be placed back in their default spots
     window.onmouseup = (e) => {
         console.log("up");
+        this.dragging = undefined;
         if(this.start === undefined)
         {
             this.clearGrid();
             this.start = findNodeWithID(23, this.nodes);
+            this.start.type = 'startPoint';
             document.getElementById(this.start.id).className = this.start.type;
         }
 
@@ -153,6 +165,7 @@ Grid.prototype.addEventListeners = function() {
         {
             this.clearGrid();
             this.end = findNodeWithID(120, this.nodes);
+            this.end.type = 'endPoint';
             document.getElementById(this.end.id).className = this.end.type;
         }
     }
