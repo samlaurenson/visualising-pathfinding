@@ -112,23 +112,27 @@ Grid.prototype.addEventListeners = function() {
                     cell.className === 'startPoint' ? this.start = undefined : this.end = undefined;
                     return; 
                 }
+
+                this.dragging = 'wall'; //Allowing dragging to draw walls
                 cell.className = cell.className === 'inactive' ? 'wall' : 'inactive';
                 this.nodes[r][c].type = cell.className;
             }
 
             cell.onmousemove = (e) => {
                 if(this.dragging === undefined) { return; }
-                cell.className = this.dragging.type;
+                if(this.dragging === 'wall' && (cell.className === 'inactive' || cell.className === 'wall')) { this.nodes[r][c].type = 'wall'; cell.className = this.dragging; return; } //dragging to draw walls
+                if(this.dragging !== 'wall') { cell.className = this.dragging.type; } //If not drawing walls - do this
             }
 
             cell.onmouseleave = (e) => {
-                if(this.dragging === undefined) { return; }
+                if(this.dragging === undefined || this.dragging === 'wall') { return; }
                 let node = findNodeWithID(parseInt(cell.id), this.nodes);
                 if(this.dragging.id === node.id) { cell.className = 'inactive'; return; } //Means a duplicate cell won't be left behind
                 cell.className = node.type;
             }
 
             cell.onmouseup = (e) => {
+                if(this.dragging === 'wall') { this.dragging = undefined; return; }
                 if(this.dragging === undefined) { return; }
 
                 //If user drags end point on top of start point - set end point back to where it came from and re-colour the nodes
