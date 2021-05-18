@@ -5,19 +5,21 @@ Making a pathfinding visualiser to try and help myself learn and understand how 
 
 
 
-After running and pressing the start button to begin pathfinding, the program will start moving from the start node (red) to the goal node (green)
+After running and pressing the start button to begin pathfinding, the program will start moving from the start node (red) to the goal node (green).
+The nodes in the open list are in light blue and the nodes the algorithm has visited are in the darker blue.
+After the algorithm has found a path to the goal node, the shortest path will be highlighted in yellow.
 
-![Alt text](https://i.gyazo.com/0a0311f5d7579ce0714ba757145c0b7c.gif)
+![Alt text](https://i.gyazo.com/68b01095b5b517fff7a2d3652639e109.gif)
 
 
 
 ## With walls added in:
 
-![Alt text](https://i.gyazo.com/4b82307d8521c6ebff66ec8e02969c35.gif)
-![Alt text](https://i.gyazo.com/096032bf44fed9e88160d5cb439fbb22.gif)
+![Alt text](https://i.gyazo.com/302e92c199bbccd255e294b0c8f607e3.gif)
+![Alt text](https://i.gyazo.com/8b937d3e4dad45970ee2b82af71423eb.gif)
 
 ## Dragging Start/End points:
-![Alt text](https://i.gyazo.com/84b71e64119a9b2323190f5e856058c8.gif)
+![Alt text](https://i.gyazo.com/990d719d612d918165fffdda0ed55c8e.gif)
 
 
 Currently, only the A* algorithm has been implemented :)
