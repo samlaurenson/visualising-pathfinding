@@ -62,6 +62,14 @@ async function AStar(nodeList, startNode, goalNode, boardHeight, boardWidth) {
             }
         }
 
+        //If statement to colour the visited nodes in blue to show the nodes
+        //the algorithm has accessed
+        if(currentNode !== startNode)
+        {
+            let cell = document.getElementById(currentNode.id);
+            cell.className = 'visited';
+        }
+
         await exploreConnections(currentNode, gScore, fScore, goalNode, boardHeight, boardWidth, openList, path);
     }
     return undefined; //if goal was not found
@@ -71,9 +79,9 @@ async function exploreConnections(currentNode, gScore, fScore, goalNode, boardHe
 {
     for(let i = 0; i < currentNode.connections.length; ++i)
     {
-        let neighbour = currentNode.connections[i];
+        let neighbour = currentNode.connections[i].node;
 
-        let gVal = gScore[currentNode.id] + 1; //Since this is a grid, will only need to increase distance by 1
+        let gVal = gScore[currentNode.id] + currentNode.connections[i].cost; //Since this is a grid, will only need to increase distance by 1
             
         //If the distance travelled from current node to this neighbour node is less than the distance travelled already
         //(If there is a shorter route, then follow this one)
@@ -123,25 +131,25 @@ function calculateConnections(nodes, height, width)
             //If there is something above this node
             if(x - 1 >= 0 && nodes[x-1][y].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x-1][y]);
+                nodes[x][y].connections.push(new connection(nodes[x-1][y], 1));
             }
 
             //there is a node below - add to connection
             if(x + 1 < height && nodes[x+1][y].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x+1][y]);
+                nodes[x][y].connections.push(new connection(nodes[x+1][y], 1));
             }
 
             //there is a node to left - add to connection
             if(y - 1 >= 0 && nodes[x][y-1].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x][y-1]);
+                nodes[x][y].connections.push(new connection(nodes[x][y-1], 1));
             }
 
             //there is a node to right - add to connection
             if(y + 1 < width && nodes[x][y+1].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x][y+1]);
+                nodes[x][y].connections.push(new connection(nodes[x][y+1], 1));
             }
 
             //DIAGONALS
@@ -150,25 +158,25 @@ function calculateConnections(nodes, height, width)
             //Checks if there is a wall in square it wants to go and wall directly above themself
             if(x-1>=0 && y-1>=0 && nodes[x-1][y-1].type !== 'wall' && nodes[x-1][y].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x-1][y-1]);
+                nodes[x][y].connections.push(new connection(nodes[x-1][y-1], 1.05));
             }
 
             //TOP RIGHT
             if(x-1>=0 && y+1 < width && nodes[x-1][y+1].type !== 'wall' && nodes[x-1][y].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x-1][y+1]);
+                nodes[x][y].connections.push(new connection(nodes[x-1][y+1], 1.05));
             }
 
             //BOTTOM LEFT
             if(x+1 < height && y-1>=0 && nodes[x+1][y-1].type !== 'wall' && nodes[x+1][y].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x+1][y-1]);
+                nodes[x][y].connections.push(new connection(nodes[x+1][y-1], 1.05));
             }
 
             //BOTTOM RIGHT
             if(x+1 < height && y+1 < width && nodes[x+1][y+1].type !== 'wall' && nodes[x+1][y].type !== 'wall')
             {
-                nodes[x][y].connections.push(nodes[x+1][y+1]);
+                nodes[x][y].connections.push(new connection(nodes[x+1][y+1], 1.05));
             }
         }
     }
@@ -185,6 +193,16 @@ function coordinate(x, y)
 {
     this.x = x;
     this.y = y;
+}
+
+//Function to group the neighbour node and the cost to move to that node
+//Adjacent squares will cost 1 and diagonal squares will cost 1.05
+//1.05 for diagonal movements allows for the algorithm to still work fast and makes the path a more sensible route than
+//having the path zig zag all over the place but still be the same distance as going straight
+function connection(node, cost)
+{
+    this.node = node;
+    this.cost = cost;
 }
 
 export default AStar;

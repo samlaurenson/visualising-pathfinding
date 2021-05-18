@@ -22,19 +22,24 @@
 
 #board td.open {
     outline: 1px solid black;
-    background-color: blue;
+    background-color: lightskyblue;
 }
 
 #board td.path {
     outline: 1px solid black;
     background-color: yellow;
+    transition: all 0.5s linear;
 }
 
 #board td.wall {
     outline: 1px solid black;
     background-color: black;
 }
-  
+
+#board td.visited {
+    outline: 1px solid black;
+    background-color: blue;
+}
 
 #mainGrid{
     position: absolute;

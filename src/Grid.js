@@ -65,6 +65,8 @@ Grid.prototype.createGrid = function() {
 };
 
 Grid.prototype.loadPathfind = async function () {
+    if(this.working) { return; }
+
     //Probably a better way of doing this - but the grid has a property to store whether it is currently working on an algorithm
     //If it is - then the reset button will not work until the algorithm has finished
     //Once algorithm is finished then the "working" property will be set to false and the user can press the reset button
@@ -74,14 +76,17 @@ Grid.prototype.loadPathfind = async function () {
 };
 
 //Method to get rid of the yellow tiles (discovered path) and blue tiles (tiles in open list)
-Grid.prototype.clearGrid = function() {
+Grid.prototype.clearGrid = function(clearWalls) {
     if(this.working === true) { return; }
     for(let r = 0; r < this.nodes.length; ++r)
     {
         for(let c = 0; c < this.nodes[r].length; ++c)
         {
             let cell = document.getElementById(this.nodes[r][c].id);
-            if(cell.className === 'path' || cell.className === 'open')
+            if(cell.className === 'path' 
+            || cell.className === 'open' 
+            || cell.className === 'visited' 
+            || (clearWalls && cell.className === 'wall'))
             {
                 cell.className = 'inactive';
                 this.nodes[r][c].type = 'inactive';
@@ -154,7 +159,7 @@ Grid.prototype.addEventListeners = function() {
                 this.nodes[r][c].type = this.dragging.type;
                 this.dragging.type === 'startPoint' ? this.start = this.nodes[r][c] : this.end = this.nodes[r][c];
                 this.dragging.type = 'inactive'; //Making the old position of the node inactive
-                this.clearGrid(); 
+                this.clearGrid(false); 
                 this.dragging = undefined;
             }
         }
@@ -167,7 +172,7 @@ Grid.prototype.addEventListeners = function() {
         this.dragging = undefined;
         if(this.start === undefined)
         {
-            this.clearGrid();
+            this.clearGrid(false);
             this.start = findNodeWithID(23, this.nodes);
             this.start.type = 'startPoint';
             document.getElementById(this.start.id).className = this.start.type;
@@ -175,7 +180,7 @@ Grid.prototype.addEventListeners = function() {
 
         if(this.end === undefined)
         {
-            this.clearGrid();
+            this.clearGrid(false);
             this.end = findNodeWithID(120, this.nodes);
             this.end.type = 'endPoint';
             document.getElementById(this.end.id).className = this.end.type;
