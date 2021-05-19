@@ -4,9 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import PathFind from './PathFinding';
+import Legends from './Legends';
 
 ReactDOM.render(
   <React.StrictMode>
+    <Legends/>
     <PathFind/>
   </React.StrictMode>,
   document.getElementById('root')
